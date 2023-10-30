@@ -1,29 +1,48 @@
-import numpy as np
+class TicTacToe:
+    def __init__(self, name): 
+        self.name = name        # Useful for future leaderboard function
 
-# Welcome 
-print("Welcome to my tic-tac-toe.")
+    def welcome(self):
+        """Welcome the player and show empty board."""
+        print("Welcome ", self.name, ", to my tic-tac-toe.")     # Welcome
 
-# Game board
-print("\nThis is the game board.")
-board = [['1','2','3'],
-         ['4','5','6'],
-         ['7','8','9']]
+        print("\nThis is the game board.")      # Empty board
+        self.board = [['-', '-', '-'],
+                ['-', '-', '-'],
+                ['-', '-', '-']]
 
-for row in board: 
-    print(row)
+        for row in self.board:                       # Print board
+            print(row)
 
-# Choosing side 
-side = input("Choose your side: X / O\n")
+    def side(self): 
+        """Choose a side."""
+        side = input("Choose your side: X / O\n")
 
-#while side != ('X' or 'O'):
-if side != ('X' or 'O'):
-    side = input("Please choose by typing 'X' or 'O'.\n")
-elif side == 'X':
-    print("You are X.")
-    #break
-elif side == 'O':
-    print("You are O.")
-    #break
+        if side != ('X' or 'O'):
+            side = input("Please choose by typing 'X' or 'O'.\n")
+        elif side == 'X':
+            print("You are X.")
+        elif side == 'O':
+            print("You are O.")
 
-print("Let the game begin. :)")
+    def start_game(self):
+        print("Let the game begin. :)")
+        print("X goes first. Choose the tile you wish to place your mark.")
+        self.row = int(input("Row: "))
+        if type(self.row) != int: 
+            self.row = input("Please input an integer.\n")
+        
+        self.col = int(input("Column: "))
+        if type(self.col) != int:
+            self.col = input("Please input an integer.\n")
 
+    def update_board(self):
+        self.board[self.row-1][self.col-1] = 'X'
+        for row in self.board:
+            print(row)
+
+game = TicTacToe("TEO")
+game.welcome()
+game.side() 
+game.start_game()
+game. update_board()
