@@ -1,44 +1,52 @@
+import random as rnd
+
 class TicTacToe:
     def __init__(self, name): 
-        self.name = name        # Useful for future leaderboard function
+        self.name = name
 
     def welcome(self):
         """Welcome the player and show board."""
         print("Welcome ", self.name, ", to my tic-tac-toe.")     # Welcome
-        self.board = [['-', '-', '-'],
-                      ['-', '-', '-'],
-                      ['-', '-', '-']]
+        self.board = [[' ', ' ', ' '],
+                      [' ', ' ', ' '],
+                      [' ', ' ', ' ']]
         print("This is the game board.")
         for row in self.board:                       # Print board
             print(row)
 
-    def side(self): 
-        """Choose a side."""
-        self.side = input("Choose your side: X / O\n")
-        while (self.side!='X' or self.side!='O'):
-            self.side = input("Please choose by typing 'X' or 'O'.\n")
-            if self.side == 'X':
+    def sym(self): 
+        """Choose a sym."""
+        self.sym_1 = input("Choose your sym: X / O\n")
+        while self.sym_1:
+            if self.sym_1 == 'X':
+                self.sym_2 = 'O'
                 print("You are X.") 
                 break               
-            elif self.side == 'O':
+            elif self.sym_1 == 'O':
+                self.sym_2 == 'X'
                 print("You are O.")
                 break
+            else:
+                self.sym_1 = input("Please choose by typing 'X' or 'O'.\n")
 
     def start_game(self, count=1):
         """Start the game."""
         print("Let the game begin. :)")
-        while (count<=9):   
-            if count == 1:
-                if self.side == 'X':
+        self.count = count
+        while self.count:   
+            if self.count == 1:
+                if self.sym_1 == 'X':
                     print("X goes first. Choose the tile you wish to place your mark.")
-                elif self.side == 'O':
-                    print("X goes first.")
-            elif count < 9:
-                if count % 2 != 0:          # Odd num is player turn
-                    print(self.side, "'s turn.")
+                else:
+                    print("X goes first. AI's turn.")
+                    game.bot_player()
+            elif self.count < 9:
+                if self.count % 2 != 0:          # Odd num is player turn
+                    print("Player ", self.sym, "'s turn.")
                 else:
                     print("AI's turn.")     # Even num is AI turn
-            elif count > 9:
+                    game.bot_player()
+            elif self.count > 9:
                 print("Draw. Game over.")
                 break
 
@@ -70,15 +78,26 @@ class TicTacToe:
                     if (self.col>=1 and self.col<=3):
                         break
                     else:
-                        print("Please input an integer fro 1 to 3.")
+                        print("Please input an integer from 1 to 3.")
                         self.col = input("Col: ")
                         self.col = int(self.col)
-            count +=1 
-            game.update_board()
+            self.count +=1 
+            game.update_board(self.sym_1)
 
-    def update_board(self):
-        """Update board and show."""
-        self.board[self.row-1][self.col-1] = 'X'
+    def bot_player(self):
+        """Bot player."""
+        self.row = rnd.randint(1,3)
+        self.col = rnd.randint(1,3)
+        game.update_board(self.sym_2)
+
+    def update_board(self, sym):
+        """Update board."""
+        self.sym = sym
+        self.board[self.row-1][self.col-1] = self.sym
+        game.show_board()
+        
+    def show_board(self):
+        """Show board."""
         print("Current board:")
         for row in self.board:
             print(row)
@@ -86,5 +105,5 @@ class TicTacToe:
 name = input("Your name: ")
 game = TicTacToe(name)
 game.welcome()
-game.side() 
+game.sym() 
 game.start_game()
