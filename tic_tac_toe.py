@@ -71,7 +71,8 @@ class TicTacToe:
         for row in self.board:
             print(row)
 
-game = TicTacToe("TEO")
+name = input("Your name: ")
+game = TicTacToe(name)
 game.welcome()
 game.side() 
 game.start_game()
