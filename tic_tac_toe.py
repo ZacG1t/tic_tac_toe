@@ -24,6 +24,7 @@ class TicTacToe:
             print("You are O.")
 
     def start_game(self):
+
         print("Let the game begin. :)")
         if self.side == 'X':
             print("X goes first. Choose the tile you wish to place your mark.")
@@ -38,9 +39,15 @@ class TicTacToe:
                 print("Please input an integer.")
                 self.row = input("Row: ")
             else:
-                self.row = int(self.row)
-                break
+                self.row = int(self.row)   
+                if (self.row>=1 and self.row<=3):
+                    break
+                else:
+                    print("Please input an integer between 1 and 3.")
+                    self.row = input("Row: ")
+                    self.row = int(self.row)
                 
+
         self.col = input("Col: ")
         while self.col:
             try:
@@ -50,7 +57,12 @@ class TicTacToe:
                 self.col = input("Col: ")
             else:
                 self.col = int(self.col)
-                break
+                if (self.col>=1 and self.col<=3):
+                    break
+                else:
+                    print("Please input an integer fro 1 to 3.")
+                    self.col = input("Col: ")
+                    self.col = int(self.col)
         game.update_board()
 
     def update_board(self):
