@@ -3,41 +3,59 @@ class TicTacToe:
         self.name = name        # Useful for future leaderboard function
 
     def welcome(self):
-        """Welcome the player and show empty board."""
+        """Welcome the player and show board."""
         print("Welcome ", self.name, ", to my tic-tac-toe.")     # Welcome
-
-        print("\nThis is the game board.")      # Empty board
         self.board = [['-', '-', '-'],
-                ['-', '-', '-'],
-                ['-', '-', '-']]
-
+                      ['-', '-', '-'],
+                      ['-', '-', '-']]
+        print("This is the game board.")
         for row in self.board:                       # Print board
             print(row)
 
     def side(self): 
         """Choose a side."""
-        side = input("Choose your side: X / O\n")
+        self.side = input("Choose your side: X / O\n")
 
-        if side != ('X' or 'O'):
+        if self.side != ('X' or 'O'):
             side = input("Please choose by typing 'X' or 'O'.\n")
-        elif side == 'X':
+        elif self.side == 'X':
             print("You are X.")
-        elif side == 'O':
+        elif self.side == 'O':
             print("You are O.")
 
     def start_game(self):
         print("Let the game begin. :)")
-        print("X goes first. Choose the tile you wish to place your mark.")
-        self.row = int(input("Row: "))
-        if type(self.row) != int: 
-            self.row = input("Please input an integer.\n")
-        
-        self.col = int(input("Column: "))
-        if type(self.col) != int:
-            self.col = input("Please input an integer.\n")
+        if self.side == 'X':
+            print("X goes first. Choose the tile you wish to place your mark.")
+        elif self.side == 'O':
+            print("X goes first.")
+
+        self.row = input("Row: ")
+        while self.row:
+            try:
+                int(self.row)
+            except ValueError:
+                print("Please input an integer.")
+                self.row = input("Row: ")
+            else:
+                self.row = int(self.row)
+                break
+                
+        self.col = input("Col: ")
+        while self.col:
+            try:
+                int(self.col)
+            except ValueError:
+                print("Please input an integer.")
+                self.col = input("Col: ")
+            else:
+                self.col = int(self.col)
+                break
+        game.update_board()
 
     def update_board(self):
         self.board[self.row-1][self.col-1] = 'X'
+        print("Current board:")
         for row in self.board:
             print(row)
 
@@ -45,4 +63,3 @@ game = TicTacToe("TEO")
 game.welcome()
 game.side() 
 game.start_game()
-game. update_board()
