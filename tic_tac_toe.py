@@ -9,9 +9,15 @@ class TicTacToe:
     def welcome(self):
         """Welcome the player and show board."""
         print("Welcome ", self.name, ", to my tic-tac-toe.")     # Welcome
+        
         self.board = [[' ', ' ', ' '],
                       [' ', ' ', ' '],
                       [' ', ' ', ' ']]
+        
+        self.data = {11:'', 12:'', 13:'',
+                     21:'', 22:'', 23:'', 
+                     31:'', 32:'', 33:'',}
+        
         print("This is the game board.")
         game.show_board()
 
@@ -37,7 +43,8 @@ class TicTacToe:
         print("Let the game begin. :)")
         # Game starts, check symbol
         self.new_count = 1
-        while True:
+        self.play = True
+        while self.play:
             if self.new_count == 1:
                 if self.sym_player == 'X':
                     print("X goes first. Player's turn.")
@@ -56,7 +63,7 @@ class TicTacToe:
                         else:
                             print("AI's turn.")
                             game.bot_player()
-                    elif (self.new_count % 2 == 0):                               # Even number turn
+                    elif (self.new_count % 2 == 0):     # Even number turn
                         if self.sym_player == 'X':
                             print("AI's turn.")
                             game.bot_player()
@@ -106,11 +113,40 @@ class TicTacToe:
         self.col = rnd.randint(1,3)
         game.update_board(self.sym_bot)
 
+    def win_con(self):
+        """Check win condition."""
+        X = 0
+        O = 0
+        if self.count > 5:
+            # Check horizontally 
+            if self.data[11] == self.data[12] == self.data[13] == 'X':
+                X = 1
+            elif self.data[21] == self.data[22] == self.data[23] == 'X':
+                X = 1
+            elif self.data[31] == self.data[32] == self.data[33] == 'X':
+                X = 1
+            elif self.data[11] == self.data[12] == self.data[13] == 'O':
+                O = 1
+            elif self.data[21] == self.data[22] == self.data[23] == 'O':
+                O = 1
+            elif self.data[31] == self.data[32] == self.data[33] == 'O':
+                O = 1
+        # Show winner
+        if X == 1:
+            print("X wins!")
+            #game.restart_game()
+        elif O == 1:
+            print("O wins!")
+            #game.restart_game()
+
     def update_board(self, sym):
         """Update board."""
         self.symbol = sym
         self.board[self.row-1][self.col-1] = self.symbol
+        coord =  int(self.row+self.col )
+        self.data[coord] = self.symbol
         game.show_board()
+        game.win_con()
         
     def show_board(self):
         """Show board."""
@@ -118,6 +154,16 @@ class TicTacToe:
         for row in self.board:
             print(row)
         print("")
+    """
+    def restart_game(self):
+        Ask user if they want to play again.
+        prompt = "Do you want to play again? Y / N\t"
+        ans = input(prompt)
+        if ans == 'Y':
+            self.play = True
+        elif ans == 'N':
+            self.play = False
+    """
 
 name = input("Your name: ")
 game = TicTacToe(name)
