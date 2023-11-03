@@ -13,11 +13,11 @@ class TicTacToe:
         self.board = [[' ', ' ', ' '],
                       [' ', ' ', ' '],
                       [' ', ' ', ' ']]
-        
+        """
         self.data = {11:'', 12:'', 13:'',
                      21:'', 22:'', 23:'', 
                      31:'', 32:'', 33:'',}
-        
+        """
         print("This is the game board.")
         game.show_board()
 
@@ -115,36 +115,39 @@ class TicTacToe:
 
     def win_con(self):
         """Check win condition."""
-        X = 0
-        O = 0
-        if self.count > 5:
-            # Check horizontally 
-            if self.data[11] == self.data[12] == self.data[13] == 'X':
-                X = 1
-            elif self.data[21] == self.data[22] == self.data[23] == 'X':
-                X = 1
-            elif self.data[31] == self.data[32] == self.data[33] == 'X':
-                X = 1
-            elif self.data[11] == self.data[12] == self.data[13] == 'O':
-                O = 1
-            elif self.data[21] == self.data[22] == self.data[23] == 'O':
-                O = 1
-            elif self.data[31] == self.data[32] == self.data[33] == 'O':
-                O = 1
-        # Show winner
-        if X == 1:
-            print("X wins!")
-            #game.restart_game()
-        elif O == 1:
-            print("O wins!")
-            #game.restart_game()
+        winner = True
+        # Check rows
+        for row in range(0,3):
+            if self.board[row][0] == self.board[row][1] == self.board[row][2] == self.sym_player:
+                print("Player (", self.sym_player, ") wins!")
+            elif self.board[row][0] == self.board[row][1] == self.board[row][2] == self.sym_bot:
+                print("AI (", self.sym_bot, ") wins!")
+        
+        # Check columns
+        for column in range(0,3):
+            if self.board[0][column] == self.board[1][column] == self.board[2][column] == self.sym_player:
+                print("Player (", self.sym_player, ") wins!")
+            elif self.board[0][column] == self.board[1][column] == self.board[2][column] == self.sym_bot:
+                print("AI (", self.sym_bot, ") wins!")
+
+        # Check diagonals 
+        if self.board[0][0] == self.board[1][1] == self.board[2][2] == self.sym_player:
+            print("Player (", self.sym_player, ") wins!")
+        elif self.board[0][0] == self.board[1][1] == self.board[2][2] == self.sym_bot:
+            print("AI (", self.sym_bot, ") wins!")
+        if self.board[0][2] == self.board[1][1] == self.board[2][0] == self.sym_player:
+            print("Player (", self.sym_player, ") wins!")
+        elif self.board[0][2] == self.board[1][1] == self.board[2][0] == self.sym_bot:
+            print("AI (", self.sym_bot, ") wins!")
+
+        return winner
 
     def update_board(self, sym):
         """Update board."""
         self.symbol = sym
         self.board[self.row-1][self.col-1] = self.symbol
-        coord =  int(self.row+self.col )
-        self.data[coord] = self.symbol
+        #coord =  int(self.row+self.col )
+        #self.data[coord] = self.symbol
         game.show_board()
         game.win_con()
         
