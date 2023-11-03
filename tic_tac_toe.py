@@ -122,7 +122,7 @@ class TicTacToe:
             row = int(input("Pick another row: "))
             col = int(input("Pick another column: "))
 
-    def win_con(self):
+    def win_game(self):
         """Check win condition."""
         winner = None
         # Check rows
@@ -165,7 +165,7 @@ class TicTacToe:
         self.symbol = sym
         self.board[row-1][col-1] = self.symbol
         game.show_board()
-        game.win_con()
+        game.win_game()
         
     def show_board(self):
         """Show board."""
@@ -186,7 +186,6 @@ class TicTacToe:
             game.sym()
         elif ans == 'N':
             self.play = False
-    
 
 name = input("Your name: ")
 game = TicTacToe(name)
