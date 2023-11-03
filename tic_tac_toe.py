@@ -70,54 +70,57 @@ class TicTacToe:
 
     def human_player(self):
         """Take input from human player."""
-        self.row = input("Row: ")
-        while self.row:
+        row = input("Row: ")
+        col = input("Col: ")
+            
+        self.take_input(row, col)
+
+    def take_input(self, row, col):
+        """Take input from human and AI."""                    
+        while row:
             try:
-                int(self.row)
+                int(row)
             except ValueError:
                 print("Please input an integer.")
-                self.row = input("Row: ")
+                row = input("Row: ")
             else:
-                self.row = int(self.row)   
-                if (self.row>=1 and self.row<=3):
+                row = int(row)   
+                if (row>=1 and row<=3):
                     break
                 else:
                     print("Please input an integer between 1 and 3.")
-                    self.row = input("Row: ")
-                    self.row = int(self.row)
-                    
-        self.col = input("Col: ")
-        while self.col:
+                    row = int(input("Row: "))
+
+        while col:
             try:
-                int(self.col)
+                int(col)
             except ValueError:
                 print("Please input an integer.")
-                self.col = input("Col: ")
+                col = input("Col: ")
             else:
-                self.col = int(self.col)
-                if (self.col>=1 and self.col<=3):
+                col = int(col)
+                if (col>=1 and col<=3):
                     break
                 else:
                     print("Please input an integer from 1 to 3.")
-                    self.col = input("Col: ")
-                    self.col = int(self.col)
+                    col = int(input("Col: "))
         
-        self.illegal(self.board, self.sym_bot, self.sym_player, self.row, self.col)
-        game.update_board(self.sym_player)
+        self.illegal(self.board, self.sym_bot, self.sym_player, row, col)
+        game.update_board(self.sym_player, row, col)
 
     def bot_player(self):
         """Bot player."""
-        self.row = rnd.randint(0,2)
-        self.col = rnd.randint(0,2) 
+        row = rnd.randint(0,2)
+        col = rnd.randint(0,2) 
         
-        self.illegal(self.board, self.sym_bot, self.sym_player, self.row, self.col)
-        game.update_board(self.sym_bot)
+        self.illegal(self.board, self.sym_bot, self.sym_player, row, col)
+        game.update_board(self.sym_bot, row, col)
 
     def illegal(self, board, sym_bot, sym_player, row, col):
         """Check for occupied tiles."""
-        while (self.board[self.row-1][self.col-1] == self.sym_bot) or (self.board[self.row-1][self.col-1] == self.sym_player):
-            self.row = int(input("Pick another row: "))
-            self.col = int(input("Pick another column: "))
+        while (self.board[row-1][col-1] == self.sym_bot) or (self.board[row-1][col-1] == self.sym_player):
+            row = int(input("Pick another row: "))
+            col = int(input("Pick another column: "))
 
     def win_con(self):
         """Check win condition."""
@@ -157,10 +160,10 @@ class TicTacToe:
         if winner == True:
             game.restart_game()
 
-    def update_board(self, sym):
+    def update_board(self, sym, row, col):
         """Update board."""
         self.symbol = sym
-        self.board[self.row-1][self.col-1] = self.symbol
+        self.board[row-1][col-1] = self.symbol
         game.show_board()
         game.win_con()
         
