@@ -8,16 +8,11 @@ class TicTacToe:
 
     def welcome(self):
         """Welcome the player and show board."""
-        print("Welcome ", self.name, ", to my tic-tac-toe.")     # Welcome
+        print("Welcome ", self.name.strip(), ", to my tic-tac-toe.")     # Welcome
         
         self.board = [[' ', ' ', ' '],
                       [' ', ' ', ' '],
                       [' ', ' ', ' ']]
-        """
-        self.data = {11:'', 12:'', 13:'',
-                     21:'', 22:'', 23:'', 
-                     31:'', 32:'', 33:'',}
-        """
         print("This is the game board.")
         game.show_board()
 
@@ -54,6 +49,7 @@ class TicTacToe:
                     game.bot_player()
             else:
                 if self.new_count == 10:
+                    self.play = False 
                     print("Game over.")
                 else:
                     if (self.new_count % 2 != 0):       # Odd number turn
@@ -105,49 +101,66 @@ class TicTacToe:
                     print("Please input an integer from 1 to 3.")
                     self.col = input("Col: ")
                     self.col = int(self.col)
+        
+        self.illegal(self.board, self.sym_bot, self.sym_player, self.row, self.col)
         game.update_board(self.sym_player)
 
     def bot_player(self):
         """Bot player."""
-        self.row = rnd.randint(1,3)
-        self.col = rnd.randint(1,3)
+        self.row = rnd.randint(0,2)
+        self.col = rnd.randint(0,2) 
+        
+        self.illegal(self.board, self.sym_bot, self.sym_player, self.row, self.col)
         game.update_board(self.sym_bot)
+
+    def illegal(self, board, sym_bot, sym_player, row, col):
+        """Check for occupied tiles."""
+        while (self.board[self.row-1][self.col-1] == self.sym_bot) or (self.board[self.row-1][self.col-1] == self.sym_player):
+            self.row = int(input("Pick another row: "))
+            self.col = int(input("Pick another column: "))
 
     def win_con(self):
         """Check win condition."""
-        winner = True
+        winner = None
         # Check rows
         for row in range(0,3):
             if self.board[row][0] == self.board[row][1] == self.board[row][2] == self.sym_player:
                 print("Player (", self.sym_player, ") wins!")
+                winner = True
             elif self.board[row][0] == self.board[row][1] == self.board[row][2] == self.sym_bot:
                 print("AI (", self.sym_bot, ") wins!")
+                winner = True
         
         # Check columns
         for column in range(0,3):
             if self.board[0][column] == self.board[1][column] == self.board[2][column] == self.sym_player:
                 print("Player (", self.sym_player, ") wins!")
+                winner = True
             elif self.board[0][column] == self.board[1][column] == self.board[2][column] == self.sym_bot:
                 print("AI (", self.sym_bot, ") wins!")
+                winner = True
 
         # Check diagonals 
         if self.board[0][0] == self.board[1][1] == self.board[2][2] == self.sym_player:
             print("Player (", self.sym_player, ") wins!")
+            winner = True
         elif self.board[0][0] == self.board[1][1] == self.board[2][2] == self.sym_bot:
             print("AI (", self.sym_bot, ") wins!")
+            winner = True
         if self.board[0][2] == self.board[1][1] == self.board[2][0] == self.sym_player:
             print("Player (", self.sym_player, ") wins!")
+            winner = True
         elif self.board[0][2] == self.board[1][1] == self.board[2][0] == self.sym_bot:
             print("AI (", self.sym_bot, ") wins!")
+            winner = True
 
-        return winner
+        if winner == True:
+            game.restart_game()
 
     def update_board(self, sym):
         """Update board."""
         self.symbol = sym
         self.board[self.row-1][self.col-1] = self.symbol
-        #coord =  int(self.row+self.col )
-        #self.data[coord] = self.symbol
         game.show_board()
         game.win_con()
         
@@ -157,16 +170,20 @@ class TicTacToe:
         for row in self.board:
             print(row)
         print("")
-    """
-    def restart_game(self):
-        Ask user if they want to play again.
+    
+    def restart_game(self, ans='N'):
+        """Ask user if they want to play again."""
         prompt = "Do you want to play again? Y / N\t"
         ans = input(prompt)
         if ans == 'Y':
-            self.play = True
+            self.count == 0
+            self.board = [[' ', ' ', ' '],
+                          [' ', ' ', ' '],
+                          [' ', ' ', ' ']]
+            game.sym()
         elif ans == 'N':
             self.play = False
-    """
+    
 
 name = input("Your name: ")
 game = TicTacToe(name)
