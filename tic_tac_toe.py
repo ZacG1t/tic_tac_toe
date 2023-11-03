@@ -3,6 +3,7 @@ import random as rnd
 class TicTacToe:
     def __init__(self, name): 
         self.name = name
+        self.count = 0
 
     def welcome(self):
         """Welcome the player and show board."""
@@ -16,46 +17,48 @@ class TicTacToe:
 
     def sym(self): 
         """Choose a sym."""
-        self.sym_player = input("Choose your sym: X / O\n")
-        if self.sym_player == 'X':
-            self.sym_bot = 'O'
-        else:
-            self.sym_bot = 'X'
+        self.sym_player = input("Choose your symbol: X / O\n")
+        while self.sym_player == '':
+            self.sym_player = input("Choose your symbol: X / O\n")
         while self.sym_player:
             if self.sym_player == 'X':
+                self.sym_bot = 'O'
                 print("You are X.") 
                 break               
             elif self.sym_player == 'O':
+                self.sym_bot = 'X'
                 print("You are O.")
                 break
             else:
                 self.sym_player = input("Please choose by typing 'X' or 'O'.\n")
-
+        self.count += 1
+        return self.count
+    
     def start_game(self):
         """Start the game."""
-        count = 1
-        self.count = count
         print("Let the game begin. :)")
         while self.count:   
             if self.count == 1:
                 if self.sym_player == 'X':
-                    print("X goes first. Player's turn.")
+                    print("\nX goes first. Player's turn.")
                 elif self.sym_player == 'O':
-                    print("X goes first. AI's turn.")
+                    print("\nX goes first. AI's turn.")
                     game.bot_player()
-            elif (self.count > 1):                # Error block
-                if self.sym_player == 'X':
-                    if (self.count % 2 != 0):          # Odd num is player turn
-                        print("Player ", self.sym_player.strip(), "'s turn.")
-                    else:
-                        print("AI's turn.")     # Even num is AI turn
+
+            elif (self.count > 1):                  # Error block
+                if self.sym_player == 'X':          # When player goes first          
+                    if (self.count % 2 == 0):
+                        print("AI's turn.")
                         game.bot_player()
-                elif self.sym_player == 'O':
-                    if (self.count % 2 != 0):
-                        print("AI's turn")
                     else:
-                        print("Player ", self.sym_player.strip(), "'s turn.") 
-                
+                        print("Player's turn.")
+                elif self.sym_player == 'O':                               # When AI goes first
+                    if (self.count % 2 == 0):
+                        print("Player's turn.")
+                    else:
+                        print("AI's turn")
+                        game.bot_player()
+
             if self.count > 9:
                 print("Draw. Game over.")
                 break
@@ -91,9 +94,10 @@ class TicTacToe:
                         print("Please input an integer from 1 to 3.")
                         self.col = input("Col: ")
                         self.col = int(self.col)
-            self.count += 1 
+            
             game.update_board(self.sym_player)
-
+            self.count += 1 
+            
     def bot_player(self):
         """Bot player."""
         self.row = rnd.randint(1,3)
@@ -102,8 +106,8 @@ class TicTacToe:
 
     def update_board(self, sym):
         """Update board."""
-        self.sym = sym
-        self.board[self.row-1][self.col-1] = self.sym
+        self.symbol = sym
+        self.board[self.row-1][self.col-1] = self.symbol
         game.show_board()
         
     def show_board(self):
