@@ -3,21 +3,21 @@ import random as rnd
 class TicTacToe:
     def __init__(self, name): 
         self.name = name
-        self.count = 0
-        self.new_count = self.count
 
     def welcome(self):
         """Welcome the player and show board."""
         print("Welcome ", self.name.strip(), ", to my tic-tac-toe.")     # Welcome
-        
+        turn = 0
         self.board = [[' ', ' ', ' '],
                       [' ', ' ', ' '],
                       [' ', ' ', ' ']]
         print("This is the game board.")
-        game.show_board()
+        game.show_board(turn)
+        game.sym(turn)
 
-    def sym(self): 
+    def sym(self, count=0): 
         """Choose a sym."""
+        turn = count
         self.sym_player = input("Choose your symbol: X / O\n")
         while self.sym_player == '':
             self.sym_player = input("Choose your symbol: X / O\n")
@@ -25,62 +25,74 @@ class TicTacToe:
             if self.sym_player == 'X':
                 self.sym_bot = 'O'
                 print("You are X.") 
+                turn = 1
+                game.start_game(count=turn, start=True)
                 break               
             elif self.sym_player == 'O':
                 self.sym_bot = 'X'
                 print("You are O.")
+                turn = 1
+                game.start_game(count=turn, start=True)
                 break
             else:
                 self.sym_player = input("Please choose by typing 'X' or 'O'.\n")
-    
-    def start_game(self):
-        """Start the game."""
-        print("Let the game begin. :)")
-        # Game starts, check symbol
-        self.new_count = 1
-        self.play = True
-        while self.play:
-            if self.new_count == 1:
-                if self.sym_player == 'X':
-                    print("X goes first. Player's turn.")
-                    game.human_player()
-                else:
-                    print("X goes first. AI's turn.")
-                    game.bot_player()
-            else:
-                if self.new_count == 10:
-                    self.play = False 
-                    print("Game over.")
-                else:
-                    if (self.new_count % 2 != 0):       # Odd number turn
-                        if self.sym_player == 'X':
-                            print("Player's turn.")
-                            game.human_player()
-                        else:
-                            print("AI's turn.")
-                            game.bot_player()
-                    elif (self.new_count % 2 == 0):     # Even number turn
-                        if self.sym_player == 'X':
-                            print("AI's turn.")
-                            game.bot_player()
-                        else:
-                            print("Player's turn.")
-                            game.human_player()
-            self.new_count += 1
 
-    def human_player(self):
+    def start_game(self, count, start):
+        """Start the game."""
+        # Game starts, check symbol
+        turn = count
+        play = start
+        if play == True:
+            while play:
+                if turn == 1:
+                    print("Let the game begin. :)")
+                    if self.sym_player == 'X':
+                        print("X goes first. Player's turn.")
+                        game.human_player(count=turn)
+                    else:
+                        print("X goes first. AI's turn.")
+                        game.bot_player(turn)
+                else:
+                    if turn == 10:
+                        play = False 
+                        print("Draw. Game over.")
+                    else:
+                        if (turn % 2 != 0):       # Odd number turn
+                            if self.sym_player == 'X':
+                                print("Player's turn.")
+                                game.human_player(turn)
+                            else:
+                                print("AI's turn.")
+                                game.bot_player(turn)
+                        elif (turn % 2 == 0):     # Even number turn
+                            if self.sym_player == 'X':
+                                print("AI's turn.")
+                                game.bot_player(count=turn)
+                            else:
+                                print("Player's turn.")
+                                game.human_player(turn)
+        else:
+            game.end_game()
+
+
+    def human_player(self, count):
         """Take input from human player."""
+        turn = count
         row = input("Row: ")
         col = input("Col: ")
             
-        self.take_input(row, col)
+        self.take_input(row, col, turn)
 
-    def take_input(self, row, col):
+    def take_input(self, row, col, count):
         """Take input from human and AI."""                    
+        turn = count
         while row:
             try:
                 int(row)
             except ValueError:
+                print("Please input an integer.")
+                row = input("Row: ")
+            except:
                 print("Please input an integer.")
                 row = input("Row: ")
             else:
@@ -97,6 +109,9 @@ class TicTacToe:
             except ValueError:
                 print("Please input an integer.")
                 col = input("Col: ")
+            except:
+                print("Please input an integer.")
+                col = input("Col: ")
             else:
                 col = int(col)
                 if (col>=1 and col<=3):
@@ -105,26 +120,42 @@ class TicTacToe:
                     print("Please input an integer from 1 to 3.")
                     col = int(input("Col: "))
         
-        self.illegal(self.board, self.sym_bot, self.sym_player, row, col)
-        game.update_board(self.sym_player, row, col)
+        self.illegal(self.board, self.sym_bot, self.sym_player, row, col, turn)
+        game.update_board(self.sym_player, row, col, turn)
 
-    def bot_player(self):
+    def bot_player(self, count):
         """Bot player."""
-        row = rnd.randint(0,2)
-        col = rnd.randint(0,2) 
-        
-        self.illegal(self.board, self.sym_bot, self.sym_player, row, col)
-        game.update_board(self.sym_bot, row, col)
+        turn = count
+        if turn > 0:
+            row = rnd.randint(0,2)
+            col = rnd.randint(0,2) 
+            
+            self.illegal(self.board, self.sym_bot, self.sym_player, row, col, turn)
+            game.update_board(self.sym_bot, row, col, turn)
+        else:
+            None
 
-    def illegal(self, board, sym_bot, sym_player, row, col):
+    def illegal(self, board, sym_bot, sym_player, row, col, count):
         """Check for occupied tiles."""
+        turn = count
         while (self.board[row-1][col-1] == self.sym_bot) or (self.board[row-1][col-1] == self.sym_player):
-            row = int(input("Pick another row: "))
-            col = int(input("Pick another column: "))
+            if (turn % 2 != 0):
+                if (self.sym_player == 'X'):
+                    row = int(input("Pick another row: "))
+                    col = int(input("Pick another column: "))
+                else:
+                    game.bot_player(count=turn)
+            elif (turn % 2 == 0):
+                if (self.sym_player == 'X'):
+                    game.bot_player(turn)
+                else:
+                    row = int(input("Pick another row: "))
+                    col = int(input("Pick another column: "))
 
-    def win_game(self):
+    def win_game(self, count):
         """Check win condition."""
         winner = None
+        turn = count
         # Check rows
         for row in range(0,3):
             if self.board[row][0] == self.board[row][1] == self.board[row][2] == self.sym_player:
@@ -158,37 +189,51 @@ class TicTacToe:
             winner = True
 
         if winner == True:
-            game.restart_game()
-
-    def update_board(self, sym, row, col):
+            game.restart_game(count=turn)
+            
+    def update_board(self, sym, row, col, count):
         """Update board."""
-        self.symbol = sym
-        self.board[row-1][col-1] = self.symbol
-        game.show_board()
-        game.win_game()
+        symbol = sym
+        turn = count
+        self.board[row-1][col-1] = symbol
+        game.show_board(turn)
+        game.win_game(turn)
+        turn = turn + 1
+        game.start_game(count=turn, start=True)
         
-    def show_board(self):
+    def show_board(self, count):
         """Show board."""
-        print("Current board:", self.new_count)
+        turn = count
+        print("Current board:", turn)
+        #turn += 1
         for row in self.board:
             print(row)
         print("")
+        return turn
     
-    def restart_game(self, ans='N'):
+    def restart_game(self, count, ans='N'):
         """Ask user if they want to play again."""
+        turn = count
         prompt = "Do you want to play again? Y / N\t"
         ans = input(prompt)
         if ans == 'Y':
-            self.count == 0
+            turn = 0
             self.board = [[' ', ' ', ' '],
                           [' ', ' ', ' '],
                           [' ', ' ', ' ']]
-            game.sym()
+            game.sym(turn)
         elif ans == 'N':
-            self.play = False
+            turn = 0
+            play = False
+            self.board = [[' ', ' ', ' '],
+                          [' ', ' ', ' '],
+                          [' ', ' ', ' ']]
+            game.end_game()
+    
+    def end_game(self):
+        """End and bye."""
+        print("Goodbye.")
 
 name = input("Your name: ")
 game = TicTacToe(name)
 game.welcome()
-game.sym()
-game.start_game()
