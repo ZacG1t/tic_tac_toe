@@ -74,7 +74,6 @@ class TicTacToe:
         elif play == 0:
             None
 
-
     def human_player(self, count):
         """Take input from human player."""
         turn = count
@@ -86,7 +85,7 @@ class TicTacToe:
     def take_input(self, row, col, count):
         """Take input from human and AI."""                    
         turn = count
-        while (turn > 0):
+        while row:
             try:
                 int(row)
             except ValueError:
